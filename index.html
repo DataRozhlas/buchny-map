@@ -49,14 +49,14 @@
         maxZoom: 16,
     }).addTo(map);
 
-    $.getJSON("https://dev.datasrozhlas.cz/buchny-map/data/ul.json", function(data) {
+    $.getJSON("https://dev.datarozhlas.cz/buchny-map/data/ul.json", function(data) {
         L.geoJSON(data, {
             onEachFeature: formatStreets,
             style: styleStreets
         }).addTo(map);
     });
 
-    $.getJSON("https://dev.datasrozhlas.cz/buchny-map/data/nam.json", function(data) {
+    $.getJSON("https://dev.datarozhlas.cz/buchny-map/data/nam.json", function(data) {
         L.geoJSON(data, {
             onEachFeature: formatStreets,
             style: styleSquares
