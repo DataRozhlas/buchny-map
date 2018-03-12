@@ -1,11 +1,50 @@
 <!DOCTYPE html>
 <meta charset="UTF-8">
 
+<style>
+body {
+    margin: 0px;
+}
+
+#frm-geocode {
+    z-index: 500;
+    position: absolute;
+    top: 10px;
+    left: 50px;
+    background: white;
+    padding: 5px;
+    float: left;
+    border: 2px solid #aaa;
+    -webkit-border-radius: 4px;
+            border-radius: 4px;
+}
+#frm-geocode label {
+    float: left;
+    clear: left;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+}
+#frm-geocode .inputs {
+    float: left;
+    clear: left;
+    padding-top: 3px;
+}
+#frm-geocode input {
+    float: left;
+}
+</style>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-<div id="buchny" style="min-height: 350px;"></div>
+<div id="buchny" style="min-height: 450px;"></div>
+<form action="?" id='frm-geocode'>
+      <label for="inp-geocode">Najít adresu</label>
+      <div class="inputs">
+        <input type="text" id="inp-geocode" placeholder="Vlhká">
+        <input type="submit" value="Najít">
+      </div>
+    </form>
 
 
 
@@ -66,4 +105,32 @@
     L.tileLayer('https://samizdat.cz/tiles/ton_l2/{z}/{x}/{y}.png', {
         maxZoom: 16,
     }).addTo(map);
+
+    //logo
+    var logo = L.control({position: 'bottomright'});
+    logo.onAdd = function(map){
+        var div = L.DomUtil.create('div', 'logo');
+        div.innerHTML= "<img src='data/logo.png'/>";
+        return div;
+    }
+    logo.addTo(map);
+
+    //geocoder
+    var form = document.getElementById("frm-geocode");
+    var geocoder = null;
+    var geocodeMarker = null;
+    form.onsubmit = function(event) {
+        event.preventDefault();
+        var text = document.getElementById("inp-geocode").value;
+        
+        $.get( "https://api.mapy.cz/geocode?query=" + text + ', Brno', function(data) {
+            if (typeof $(data).find('item').attr('x') == 'undefined') {
+                alert('Bohužel, adresu "' + text + '" nebylo možné najít.');
+                return;
+            }
+            var x = parseFloat($(data).find('item').attr('x'))
+            var y = parseFloat($(data).find('item').attr('y'))
+            map.setView([y, x], 16);    
+        }, 'xml');  
+    };
 </script>
