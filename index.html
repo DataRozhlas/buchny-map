@@ -59,7 +59,7 @@ body {
     function styleStreets(feature) {
         return {
             color: getColor(feature.properties.buchny_2),
-            weight: 2,
+            weight: 3,
             opacity: 1
         };
     };
@@ -82,10 +82,16 @@ body {
     }).addTo(map);
 
     $.getJSON("https://dev.datarozhlas.cz/buchny-map/data/ul.json", function(data) {
-        L.geoJSON(data, {
+        var ulice = L.geoJSON(data, {
             onEachFeature: formatStreets,
             style: styleStreets
         }).addTo(map);
+
+        map.on('zoomend', function() {
+            var zoom = map.getZoom();
+            var w = zoom * 0.4;
+            ulice.setStyle({weight: w});
+        });
     });
 
     $.getJSON("https://dev.datarozhlas.cz/buchny-map/data/nam.json", function(data) {
@@ -119,7 +125,9 @@ body {
 
     $('.logo').on('click', function() {
         window.location = 'https://www.mpb.cz';
-    })
+    });
+
+
 
     //geocoder
     var form = document.getElementById("frm-geocode");
