@@ -6,11 +6,11 @@ body {
     margin: 0px;
 }
 
+.logo {
+    cursor: pointer;
+}
+
 #frm-geocode {
-    z-index: 500;
-    position: absolute;
-    top: 10px;
-    left: 50px;
     background: white;
     padding: 5px;
     float: left;
@@ -38,13 +38,6 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <div id="buchny" style="min-height: 450px;"></div>
-<form action="?" id='frm-geocode'>
-      <label for="inp-geocode">Najít adresu</label>
-      <div class="inputs">
-        <input type="text" id="inp-geocode" placeholder="Vlhká">
-        <input type="submit" value="Najít">
-      </div>
-    </form>
 
 
 
@@ -110,10 +103,23 @@ body {
     var logo = L.control({position: 'bottomright'});
     logo.onAdd = function(map){
         var div = L.DomUtil.create('div', 'logo');
-        div.innerHTML= "<img src='data/logo.png'/>";
+        div.innerHTML = '<img src="https://dev.datarozhlas.cz/buchny-map/data/logo.png"/>';
         return div;
     }
     logo.addTo(map);
+
+    var gcoder = L.control({position: 'topleft'});
+    gcoder.onAdd = function(map){
+        var div = L.DomUtil.create('div', 'gcoder');
+        div.innerHTML = '<form action="?" id="frm-geocode"><label for="inp-geocode">Najít adresu</label><div class="inputs"><input type="text" id="inp-geocode" placeholder="Vlhká"><input type="submit" value="Najít"></div></form>';
+        return div;
+    }
+    gcoder.addTo(map);
+
+
+    $('.logo').on('click', function() {
+        window.location = 'https://www.mpb.cz';
+    })
 
     //geocoder
     var form = document.getElementById("frm-geocode");
